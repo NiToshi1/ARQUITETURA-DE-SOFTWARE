@@ -1,0 +1,54 @@
+flowchart LR
+    Vendedor["Vendedor<br>(Realiza vendas)"]
+    Admin["Administrador<br>(Gerencia produtos)"]
+    Estoque["Equipe de Estoque<br>(Controla estoque)"]
+
+    Sistema["Sistema de Vendas<br>e Estoque"]
+
+    Vendedor -->|Cadastra pedidos| Sistema
+    Admin -->|Gerencia produtos| Sistema
+    Estoque -->|Registra movimentações| Sistema
+
+    flowchart LR
+    Vendedor["Vendedor"]
+    Admin["Administrador"]
+    Estoque["Equipe de Estoque"]
+
+    subgraph Sistema["Sistema da Empresa"]
+        Interface["Aplicação Web<br>(Interface)"]
+        API["API / Servidor<br>(Regras de negócio)"]
+        Banco[("Banco de Dados<br>(Informações)")]
+
+        Interface -->|Solicita operações| API
+        API -->|Consulta e grava| Banco
+    end
+
+    Vendedor --> Interface
+    Admin --> Interface
+    Estoque --> Interface
+
+    flowchart TD
+    Vendedor["Vendedor"]
+    Admin["Administrador"]
+    Estoque["Equipe de Estoque"]
+
+    subgraph Sistema["Sistema da Empresa"]
+        subgraph Apresentacao["Apresentação"]
+            Interface["Interface Web"]
+        end
+
+        subgraph Dominio["Domínio"]
+            API["API<br>Regras de Negócio"]
+        end
+
+        subgraph Dados["Dados"]
+            Banco[("Banco de Dados")]
+        end
+
+        Interface --> API
+        API --> Banco
+    end
+
+    Vendedor --> Interface
+    Admin --> Interface
+    Estoque --> Interface
