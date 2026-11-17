@@ -1,0 +1,10 @@
+stateDiagram-v2
+    [*] --> INDISPONIVEL : criarProduto() [estoque == 0]
+
+    INDISPONIVEL --> DISPONIVEL : darEntrada() [estoque > 0]
+    DISPONIVEL --> INDISPONIVEL : darSaida() [estoque == 0]
+
+    DISPONIVEL --> DESCONTINUADO : descontinuar() [isAdmin == true]
+    INDISPONIVEL --> DESCONTINUADO : descontinuar() [isAdmin == true]
+
+    DESCONTINUADO --> [*]

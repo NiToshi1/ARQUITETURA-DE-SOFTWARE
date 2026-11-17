@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Pedidos de Venda</title>
+</head>
+<body>
+    <h1>Pedidos de Venda</h1>
+
+    <div th:if="${sucesso}" style="color: green;" th:text="${sucesso}"></div>
+    <div th:if="${erro}" style="color: red;" th:text="${erro}"></div>
+
+    <form th:action="@{/pedidos}" th:object="${novoPedido}" method="post">
+        <input type="text" th:field="*{clienteNome}" placeholder="Nome do Cliente" required />
+        <input type="email" th:field="*{clienteEmail}" placeholder="E-mail do Cliente" required />
+        <input type="number" step="0.01" th:field="*{valorTotal}" placeholder="Valor Total" required />
+        <button type="submit">Registrar Pedido</button>
+    </form>
+
+    <table border="1" cellpadding="8" style="margin-top: 16px;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Cliente</th>
+                <th>E-mail</th>
+                <th>Valor</th>
+                <th>Status</th>
+                <th>Fatura ID</th>
+                <th>Ação</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="p : ${pedidos}">
+                <td th:text="${p.id}"></td>
+                <td th:text="${p.clienteNome}"></td>
+                <td th:text="${p.clienteEmail}"></td>
+                <td th:text="${p.valorTotal}"></td>
+                <td th:text="${p.status}"></td>
+                <td th:text="${p.faturaId != null ? p.faturaId : '-'}"></td>
+                <td>
+                    <form th:if="${p.status == 'ABERTO'}" th:action="@{/pedidos/{id}/fechar(id=${p.id})}" method="post">
+                        <button type="submit">Fechar Pedido</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

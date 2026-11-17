@@ -1,0 +1,27 @@
+sequenceDiagram
+    actor TimeEstoque as Time de Estoque
+    participant EstoqueController
+    participant EstoqueService
+    participant ProductRepository
+
+    Note over TimeEstoque, ProductRepository: Rotina de Entrada de Estoque
+    TimeEstoque->>EstoqueController: POST /estoque/entrada (productId, qtd)
+    EstoqueController->>EstoqueService: registrarEntrada(productId, qtd)
+    EstoqueService->>ProductRepository: findById(productId)
+    ProductRepository-->>EstoqueService: Product
+    EstoqueService->>EstoqueService: darEntrada(qtd) [se saiu de 0 -> DISPONIVEL]
+    EstoqueService->>ProductRepository: save(product)
+    ProductRepository-->>EstoqueService: Product atualizado
+    EstoqueService-->>EstoqueController: Product atualizado
+    EstoqueController-->>TimeEstoque: redirect /estoque
+
+    Note over TimeEstoque, ProductRepository: Rotina de Saída de Estoque
+    TimeEstoque->>EstoqueController: POST /estoque/saida (productId, qtd)
+    EstoqueController->>EstoqueService: registrarSaida(productId, qtd)
+    EstoqueService->>ProductRepository: findById(productId)
+    ProductRepository-->>EstoqueService: Product
+    EstoqueService->>EstoqueService: darSaida(qtd) [se zerou -> INDISPONIVEL]
+    EstoqueService->>ProductRepository: save(product)
+    ProductRepository-->>EstoqueService: Product atualizado
+    EstoqueService-->>EstoqueController: Product atualizado
+    EstoqueController-->>TimeEstoque: redirect /estoque

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Controle de Estoque</title>
+</head>
+<body>
+    <h1>Módulo de Controle de Estoque</h1>
+    <p><a th:href="@{/products}">Ir para Cadastro de Produtos</a></p>
+
+    <div th:if="${sucesso}" style="color: green;" th:text="${sucesso}"></div>
+    <div th:if="${erro}" style="color: red;" th:text="${erro}"></div>
+
+    <table border="1" cellpadding="8" style="margin-top: 16px;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Produto</th>
+                <th>Estoque Atual</th>
+                <th>Status</th>
+                <th>Entrada / Saída</th>
+                <th>Administração</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="p : ${produtos}">
+                <td th:text="${p.id}"></td>
+                <td th:text="${p.nome}"></td>
+                <td th:text="${p.quantidadeEstoque}"></td>
+                <td th:text="${p.status}"></td>
+                <td>
+                    <form th:action="@{/estoque/entrada}" method="post" style="display:inline;">
+                        <input type="hidden" name="productId" th:value="${p.id}" />
+                        <input type="number" name="quantidade" min="1" placeholder="Qtd" required />
+                        <button type="submit" th:disabled="${p.status.name() == 'DESCONTINUADO'}">+ Entrada</button>
+                    </form>
+
+                    <form th:action="@{/estoque/saida}" method="post" style="display:inline;">
+                        <input type="hidden" name="productId" th:value="${p.id}" />
+                        <input type="number" name="quantidade" min="1" placeholder="Qtd" required />
+                        <button type="submit" th:disabled="${p.status.name() != 'DISPONIVEL'}">- Saída</button>
+                    </form>
+                </td>
+                <td>
+                    <form th:action="@{/estoque/descontinuar}" method="post">
+                        <input type="hidden" name="productId" th:value="${p.id}" />
+                        <label><input type="checkbox" name="isAdmin" value="true" /> Sou ADM</label>
+                        <button type="submit" th:disabled="${p.status.name() == 'DESCONTINUADO'}">Descontinuar</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

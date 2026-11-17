@@ -1,0 +1,15 @@
+flowchart TD
+    Inicio(( )) --> A[Recebe solicitação de saída de estoque]
+    A --> B{Produto está DESCONTINUADO?}
+    B -- [sim] --> C[Recusa operação: produto descontinuado]
+    B -- [não] --> D{Status é DISPONÍVEL e estoque >= qtd?}
+    D -- [não] --> E[Recusa operação: sem estoque disponível]
+    D -- [sim] --> F[Subtrai quantidade do estoque]
+    F --> G{Estoque zerou?}
+    G -- [sim] --> H[Altera status do produto para INDISPONIVEL]
+    G -- [não] --> I[Mantém status como DISPONIVEL]
+    H --> J[Salva produto atualizado]
+    I --> J
+    C --> Fim(( ))
+    E --> Fim
+    J --> Fim
